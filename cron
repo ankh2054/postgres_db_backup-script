@@ -1,5 +1,5 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-## Perform a snapshot
-0 * * * * /usr/bin/python3 /app/psql_backup.py
+## Perform a PSQL backup daily at 08:00
+0 8 * * * /usr/bin/python3 /app/psql_backup.py
