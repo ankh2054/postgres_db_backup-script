@@ -1,13 +1,14 @@
 import boto3 
-import wasabiconfig as cfg
+import config as cfg
 import time
 
 # todays\'s epoch
 tday = time.time()
 retention = cfg.core["retention_days"]
-duration = 86400*int(retention) #2 days in epoch seconds
+duration = 80000*int(retention) #1 days in epoch seconds - 6400 seconds. 
 #checkpoint for deletion
-expire_limit = tday - duration
+expire_limit = tday + duration # Take todays time and add 80000 seconds, if the file is older than that then delete.
+print(expire_limit)
 # initialize s3 client
 file_size = [] #just to keep track of the total savings in storage size
 
@@ -71,11 +72,12 @@ def delete_s3_file(file_path, bucket):
     s4.delete_object(Bucket=bucket, Key=file_path)
     return True
 
-# Check expiration date
-def check_expiration(key_date=tday, limit=expire_limit):
-    if key_date < limit:
+def check_timestamp(fs, limit=expire_limit):
+    # Is timestamp of bucket file older than retention
+    if fs > limit:
+        print(fs)
+        print(limit)
         return True
-
 
 
 def delete_files():
@@ -83,6 +85,6 @@ def delete_files():
     s3_file = get_key_info(bucket)
     # i is the counter 
     for i, fs in enumerate(s3_file["timestamp"]):
-        file_expired = check_expiration(fs)
+        file_expired = check_timestamp(fs)
         if file_expired: #if True is recieved
             delete_s3_file(s3_file["key_path"][i], bucket)

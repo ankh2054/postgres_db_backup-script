@@ -5,10 +5,7 @@ from datetime import datetime
 from subprocess import PIPE,Popen
 import subprocess
 import wasabi
-import wasabiconfig as cfg
-
-
-
+import config as cfg
 
 
 PGUSER = cfg.psql["pguser"]
@@ -48,7 +45,8 @@ def main():
     subprocess.call([ 'rm', f'/tmp/{filename}'])
 
 if __name__ == "__main__":
-     main()
+     #main()
+     wasabi.delete_files()
 
 # Delete files older than 2 days in bucket specified
 wasabi.delete_files()
