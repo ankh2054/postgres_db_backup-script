@@ -5,9 +5,9 @@ import time
 # todays\'s epoch
 tday = time.time()
 retention = cfg.core["retention_days"]
-duration = 80000*int(retention) #1 days in epoch seconds - 6400 seconds. 
+duration = 86400*int(retention) - 100 #1 days in epoch seconds 
 #checkpoint for deletion
-expire_limit = tday + duration # Take todays time and add 80000 seconds, if the file is older than that then delete.
+expire_limit = tday - duration #duration # Take todays time and deduct one day, if the file is older than that then delete.
 print(expire_limit)
 # initialize s3 client
 file_size = [] #just to keep track of the total savings in storage size
