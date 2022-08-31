@@ -74,9 +74,9 @@ def delete_s3_file(file_path, bucket):
 
 def check_timestamp(fs, limit=expire_limit):
     # Is timestamp of bucket file older than retention
-    if fs > limit:
-        print(fs)
-        print(limit)
+    if fs < limit:
+        print(f' File timestamp {fs}')
+        print(f'Time limit {limit}')
         return True
 
 
