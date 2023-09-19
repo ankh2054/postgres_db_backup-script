@@ -36,29 +36,27 @@ def wasabiuploadfile(localfile,remotefile):
 
 #works to only get us key/file information
 def get_key_info(bucket):
-
     key_names = []
     file_timestamp = []
     file_size = []
     kwargs = {"Bucket": bucket}
     while True:
         response = s4.list_objects_v2(**kwargs)
-        for obj in response["Contents"]:
-            # exclude directories/folder from results. Remove this if folders are to be removed too
-            if "." in obj["Key"]:
-                key_names.append(obj["Key"])
-                file_timestamp.append(obj["LastModified"].timestamp())
-                file_size.append(obj["Size"])
+        # Check if 'Contents' is in the response
+        if 'Contents' in response:
+            for obj in response["Contents"]:
+                # exclude directories/folder from results. Remove this if folders are to be removed too
+                if "." in obj["Key"]:
+                    key_names.append(obj["Key"])
+                    file_timestamp.append(obj["LastModified"].timestamp())
+                    file_size.append(obj["Size"])
+        else:
+            print("Bucket is empty.")
+            break
         try:
-            # S3 only returns first 1000, so if more is available a ContinuationToken will be returned.
-            # S3 expects you to provide  NextContinuationToken kn your response.
-            # So this tests whether we can provide this token.
-            # If not we will receive a keyerror.
             kwargs["ContinuationToken"] = response["NextContinuationToken"]
-        # If we receive this keyerror, break.
         except KeyError:
             break
-    # Append the information to a key_info dict.
     key_info = {
         "key_path": key_names,
         "timestamp": file_timestamp,

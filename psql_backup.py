@@ -45,7 +45,7 @@ def main():
     subprocess.call([ 'rm', f'/tmp/{filename}'])
 
 if __name__ == "__main__":
-     #main()
+     main()
      wasabi.delete_files()
 
 # Delete files older than 2 days in bucket specified
