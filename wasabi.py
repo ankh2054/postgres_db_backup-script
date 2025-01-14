@@ -19,7 +19,7 @@ s4 = boto3.client('s3',
 ## Multiple chains - add additional argument, bucketname, version (to be applied as metadata)
 def wasabiuploadfile(localfile,remotefile,bucket_name):
     s4.upload_file(
-        localfile, wasabi_bucket, remotefile,
+        localfile, bucket_name, remotefile,
         ExtraArgs={
             #'ACL': 'public-read'
             #'ContentType': 'application/gzip'
