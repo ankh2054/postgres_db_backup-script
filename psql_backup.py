@@ -44,14 +44,7 @@ def dump_database(host, dbname, user, password, output_file, bucket_name):
     conn.close()
     wasabi.wasabiuploadfile(output_file, create_filename(dbname), bucket_name)
 
-def main(configs):
-    # Hardcoded AWS credentials
-    wasabi.init(
-        access_key="1J7XQIHHZ6TTMGDVEL1G",
-        secret_key="2tS8gegOl0dkozbDYwU80Je2MChv0TEGztTiObPr",
-        endpoint_url="https://s3.eu-central-1.wasabisys.com"
-    )
-    
+def main(configs):    
     for cfg in configs:
         filename = create_filename(cfg['db'])
         output_path = os.path.join(DIR, filename)
