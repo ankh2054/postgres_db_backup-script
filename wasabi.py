@@ -13,19 +13,16 @@ print(expire_limit)
 file_size = [] #just to keep track of the total savings in storage size
 
 
-endpoint = cfg.s3["endpoint_url"]
-aws_access_key = cfg.s3["aws_access_key_id"]
-aws_secret_key = cfg.s3["aws_secret_access_key"]
-wasabi_bucket = cfg.s3["wasabi_bucket"]
-
+# Hardcoded AWS credentials (from your earlier snippet)
 s4 = boto3.client('s3',
-endpoint_url = endpoint,
-aws_access_key_id = aws_access_key,
-aws_secret_access_key = aws_secret_key)
+    endpoint_url="https://s3.eu-central-1.wasabisys.com",
+    aws_access_key_id="1J7XQIHHZ6TTMGDVEL1G",
+    aws_secret_access_key="2tS8gegOl0dkozbDYwU80Je2MChv0TEGztTiObPr"
+)
 
 
 ## Multiple chains - add additional argument, bucketname, version (to be applied as metadata)
-def wasabiuploadfile(localfile,remotefile):
+def wasabiuploadfile(localfile,remotefile,bucket_name):
     s4.upload_file(
         localfile, wasabi_bucket, remotefile,
         ExtraArgs={
@@ -86,3 +83,4 @@ def delete_files():
         file_expired = check_timestamp(fs)
         if file_expired: #if True is recieved
             delete_s3_file(s3_file["key_path"][i], bucket)
+
