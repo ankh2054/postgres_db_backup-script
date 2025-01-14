@@ -1,52 +1,62 @@
-import requests
-import json
-import time
+import psycopg2
+from psycopg2 import sql
 from datetime import datetime
-from subprocess import PIPE,Popen
-import subprocess
 import wasabi
 import config as cfg
-
+import os
 
 PGUSER = cfg.psql["pguser"]
 DB = cfg.psql["db"]
 DB_PASSWORD = cfg.psql["pgpassword"]
+HOST = cfg.psql["pghost"]
 DIR = '/tmp'
 
 def create_filename():
-    #Get current date and time
     now = datetime.now()
-    # create date string for filename
     dt_string = now.strftime("%d_%m_%Y-%H_%M")
-    # Create filename for snapshot using date string
-    FILENAME = DB + dt_string + '.sql'
-    return FILENAME
+    return f"{DB}_{dt_string}.sql"
 
-def dump_table(dbname,dbuser,database_password,filename):
-    command = f'pg_dump --dbname={dbname} ' \
-            f'--username={dbuser} ' \
-            f'--no-password ' \
-            f'--format=c ' \
-            f'--file=/tmp/{filename}'
-    proc = Popen(command, shell=True, env={
-            'PGPASSWORD': database_password
-        })
-    proc.wait()
-
+def dump_database(host, dbname, user, password, output_file):
+    conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password)
+    cursor = conn.cursor()
+    
+    # Get all tables
+    cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
+    tables = [row[0] for row in cursor.fetchall()]
+    
+    with open(output_file, 'w') as f:
+        # Dump schema
+        cursor.execute("""
+            SELECT table_name, column_name, data_type, is_nullable, column_default 
+            FROM information_schema.columns 
+            WHERE table_schema='public'
+        """)
+        for table, column, dtype, nullable, default in cursor.fetchall():
+            null_constraint = " NOT NULL" if nullable == 'NO' else ""
+            default_constraint = f" DEFAULT {default}" if default else ""
+            f.write(f"CREATE TABLE {table} ({column} {dtype}{null_constraint}{default_constraint});\n")
+        
+        # Dump data
+        for table in tables:
+            cursor.execute(sql.SQL("SELECT * FROM {}").format(sql.Identifier(table)))
+            for row in cursor.fetchall():
+                values = ', '.join([f"'{str(value)}'" if value is not None else 'NULL' for value in row])
+                f.write(f"INSERT INTO {table} VALUES ({values});\n")
+    
+    cursor.close()
+    conn.close()
 
 def main():
-    # create new filename withdate timestamp and suffix of sql
     filename = create_filename()
-    # Take DB dump
-    dump_table(DB,PGUSER,DB_PASSWORD,filename)
-    # Upload file to Wasabi
-    wasabi.wasabiuploadfile(f'/tmp/{filename}',filename)
-    # delete backup locally
-    subprocess.call([ 'rm', f'/tmp/{filename}'])
+    output_path = os.path.join(DIR, filename)
+    
+    # Dump database
+    dump_database(HOST, DB, PGUSER, DB_PASSWORD, output_path)
+    
+    # Upload and cleanup
+    wasabi.wasabiuploadfile(output_path, filename)
+    os.remove(output_path)
 
 if __name__ == "__main__":
-     main()
-     wasabi.delete_files()
-
-# Delete files older than 2 days in bucket specified
-wasabi.delete_files()
+    main()
+    wasabi.delete_files()
