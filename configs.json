@@ -1,0 +1,16 @@
+[
+    {
+        "host": "db1.example.com",
+        "db": "database1",
+        "user": "user1",
+        "password": "pass1",
+        "bucket": "bucket1"
+    },
+    {
+        "host": "localhost",
+        "db": "localdb",
+        "user": "localuser",
+        "password": "localpass",
+        "bucket": "localbucket"
+    }
+] 
