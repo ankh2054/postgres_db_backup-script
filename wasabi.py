@@ -27,11 +27,11 @@ def wasabiuploadfile(localfile,remotefile,bucket_name):
     )
 
 #works to only get us key/file information
-def get_key_info(bucket):
+def get_key_info(bucket_name):
     key_names = []
     file_timestamp = []
     file_size = []
-    kwargs = {"Bucket": bucket}
+    kwargs = {"Bucket": bucket_name}
     while True:
         response = s4.list_objects_v2(**kwargs)
         # Check if 'Contents' is in the response
@@ -57,9 +57,9 @@ def get_key_info(bucket):
     return key_info
 
 # connect to s3 and delete the file
-def delete_s3_file(file_path, bucket):
+def delete_s3_file(file_path, bucket_name):
     print(f"Deleting {file_path}")
-    s4.delete_object(Bucket=bucket, Key=file_path)
+    s4.delete_object(Bucket=bucket_name, Key=file_path)
     return True
 
 def check_timestamp(fs, limit=expire_limit):
@@ -70,12 +70,11 @@ def check_timestamp(fs, limit=expire_limit):
         return True
 
 
-def delete_files():
-    bucket = wasabi_bucket
-    s3_file = get_key_info(bucket)
+def delete_files(bucket_name):
+    s3_file = get_key_info(bucket_name)
     # i is the counter 
     for i, fs in enumerate(s3_file["timestamp"]):
         file_expired = check_timestamp(fs)
         if file_expired: #if True is recieved
-            delete_s3_file(s3_file["key_path"][i], bucket)
+            delete_s3_file(s3_file["key_path"][i], bucket_name)
 
