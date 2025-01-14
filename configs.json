@@ -5,5 +5,20 @@
         "user": "ankh2054",
         "password": "Nightshade900!",
         "bucket": "raidbot-backups"
+    },
+    {
+        "host": "sentnl.db",
+        "db": "sentnl",
+        "user": "klondike",
+        "password": "Nightshade900!",
+        "bucket": "sentnl-backups"
+    }
+    {
+        "host": "sengine-db",
+        "db": "wax_sengine",
+        "user": "ankh2054",
+        "password": "Nightshade900!",
+        "bucket": "sengine-backups"
     }
 ] 
+
