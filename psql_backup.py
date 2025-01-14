@@ -55,4 +55,6 @@ if __name__ == "__main__":
     with open('configs.json') as f:
         configs = json.load(f)
     main(configs)
-    wasabi.delete_files(bucket)
+    # Delete old files for each bucket
+    for cfg in configs:
+        wasabi.delete_files(cfg['bucket'])
