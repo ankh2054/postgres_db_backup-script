@@ -1,8 +1,16 @@
  
 FROM python:3.9-slim
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    cron \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+
 WORKDIR /app
-RUN pip install boto3 requests psycopg2
+RUN pip install -r requirements.txt
 COPY . .
 
 # Install cron
