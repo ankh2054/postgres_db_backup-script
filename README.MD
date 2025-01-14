@@ -24,3 +24,11 @@ boto3
 - **pguser:** Psql user 
 - **pgpassword:** Psql password of user
 
+
+
+# Build the image
+docker build -t db-backup .
+
+# Run the container with volume mount
+docker run -d --name db-backup-container -v (pwd)/configs.json:/app/configs.json db-backup
+
