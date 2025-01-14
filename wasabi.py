@@ -70,7 +70,7 @@ def check_timestamp(fs, limit=expire_limit):
         return True
 
 
-def delete_files(bucket_name):
+def delete_files(bucket):
     s3_file = get_key_info(bucket)
     # i is the counter 
     for i, fs in enumerate(s3_file["timestamp"]):
