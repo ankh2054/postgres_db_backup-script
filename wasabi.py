@@ -1,15 +1,11 @@
 import boto3 
-import config as cfg
 import time
 
-# todays\'s epoch
+
 tday = time.time()
-retention = cfg.core["retention_days"]
+retention = 2
 duration = 86400*int(retention) - 100 #1 days in epoch seconds 
-#checkpoint for deletion
 expire_limit = tday - duration #duration # Take todays time and deduct one day, if the file is older than that then delete.
-print(expire_limit)
-# initialize s3 client
 file_size = [] #just to keep track of the total savings in storage size
 
 
@@ -19,7 +15,6 @@ s4 = boto3.client('s3',
     aws_access_key_id="1J7XQIHHZ6TTMGDVEL1G",
     aws_secret_access_key="2tS8gegOl0dkozbDYwU80Je2MChv0TEGztTiObPr"
 )
-
 
 ## Multiple chains - add additional argument, bucketname, version (to be applied as metadata)
 def wasabiuploadfile(localfile,remotefile,bucket_name):
