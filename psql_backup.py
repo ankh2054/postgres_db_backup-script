@@ -2,13 +2,10 @@ import psycopg2
 from psycopg2 import sql
 from datetime import datetime
 import wasabi
-import config as cfg
 import os
+import json
 
-PGUSER = cfg.psql["pguser"]
-DB = cfg.psql["db"]
-DB_PASSWORD = cfg.psql["pgpassword"]
-HOST = cfg.psql["pghost"]
+
 DIR = '/tmp'
 
 def create_filename(db):
