@@ -12,7 +12,7 @@
         "user": "klondike",
         "password": "Nightshade900!",
         "bucket": "sentnl-backups"
-    }
+    },
     {
         "host": "sengine-db",
         "db": "wax_sengine",
