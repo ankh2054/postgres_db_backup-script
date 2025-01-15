@@ -5,7 +5,7 @@ import wasabi
 import os
 import json
 
-
+CONFIG_PATH = '/app/configs.json'
 DIR = '/tmp'
 
 def create_filename(db):
@@ -52,7 +52,7 @@ def main(configs):
         os.remove(output_path)
 
 if __name__ == "__main__":
-    with open('configs.json') as f:
+    with open(CONFIG_PATH) as f:
         configs = json.load(f)
     main(configs)
     # Delete old files for each bucket
