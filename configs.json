@@ -19,6 +19,21 @@
         "user": "ankh2054",
         "password": "Nightshade900!",
         "bucket": "sengine-backups"
+    },
+    {
+        "host": "missingblocks-testnet-db",
+        "db": "missingblocks",
+        "user": "waxuser",
+        "password": "Nightshade900!",
+        "bucket": "misst-backups"
+    },
+    {
+        "host": "missingblocks-mainnet-db",
+        "db": "missingblocks",
+        "user": "waxuser",
+        "password": "Nightshade900!",
+        "bucket": "missm-backups"
     }
+
 ] 
 
